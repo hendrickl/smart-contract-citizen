@@ -34,7 +34,7 @@ const web3InitialState = {
   balance: "0",
 };
 
-const Register = () => {
+const RegisterWeb3 = () => {
   const [web3State, web3Dispatch] = useReducer(web3Reducer, web3InitialState);
 
   //! Check if Web3 is injected
@@ -74,4 +74,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterWeb3;
