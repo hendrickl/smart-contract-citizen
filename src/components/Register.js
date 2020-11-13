@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { ethers } from "ethers";
 import { isConnected2MetaMask } from "../utils/eth-utils.js";
-import { Citizen_address, Citizen_abi } from "../Contracts/Citizen.js";
+import { Citizen_address, Citizen_abi } from "../contracts/Citizen.js";
 
 const web3Reducer = (state, action) => {
   switch (action.type) {
