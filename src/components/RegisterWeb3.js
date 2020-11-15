@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { ethers } from "ethers";
-import { isConnected2MetaMask, sendTransaction } from "../utils/eth-utils.js";
-import { Citizen_address, Citizen_abi } from "../contracts/Citizen.js";
+import { isConnected2MetaMask } from "../utils/eth-utils.js";
 
 const web3Reducer = (state, action) => {
   switch (action.type) {
@@ -46,9 +45,9 @@ const dappReducer = (state, action) => {
 };
 
 const initialDappState = {
-  donateValue: "0.0000",
-  connecting: false,
-  myAddr: "0x1f4fdad26cfe9636adb5595a3814a25e892a9326",
+  donateValue: 0.04,
+  isConnecting: false,
+  myAddr: "0x6C97b80D51F0d13744419c48a9045456c82f14dA",
 };
 
 function RegisterWeb3() {
@@ -58,20 +57,6 @@ function RegisterWeb3() {
   const handleOnConnect = () => {
     if (!web3State.isEnabled)
       dappDispatch({ type: "SET_isConnecting", isConnecting: true });
-  };
-
-  const handleOnChange = (currentDonateValue) => {
-    dappDispatch({
-      type: "SET_donateValue",
-      donateValue: currentDonateValue,
-    });
-  };
-
-  const handleOnClick = async () => {
-    await sendTransaction(web3State.signer, web3State.provider, {
-      to: dappState.myAddr,
-      value: ethers.utils.parseEther(dappState.donateValue),
-    });
   };
 
   // Check if Web3 is injected
@@ -94,10 +79,12 @@ function RegisterWeb3() {
         web3Dispatch({ type: "SET_isEnabled", isEnabled: false });
       }
     };
-    isConnected();
+    if (web3State.isWeb3) {
+      isConnected();
+    }
   }, [web3State.isWeb3]);
 
-  //If not connected to metamask can connect with button
+  //If not connected to metamask connect with button
   useEffect(() => {
     const connect2MetaMask = async () => {
       try {
@@ -117,10 +104,10 @@ function RegisterWeb3() {
       }
     };
 
-    if (web3State.isWeb3 && dappState.isConnecting && !web3State.isEnabled) {
+    if (web3State.isWeb3 && !web3State.isEnabled) {
       connect2MetaMask();
     }
-  }, [web3State.isWeb3, dappState.isConnecting, web3State.isEnabled]);
+  }, [web3State.isWeb3, web3State.isEnabled]);
 
   // Connect to provider
   useEffect(() => {
@@ -159,13 +146,40 @@ function RegisterWeb3() {
   }, [web3State.isEnabled, web3State.account]);
 
   return (
-    <div className="row vh-100 justify-content-center">
-      <div className="col align-self-center">
-        <h1 className="display-1 text-center">Welcome Citizen</h1>
-        <p className="text-center">Account to register :</p>
-        <p className="text-center">test2</p>
-        <p className="text-center">test3</p>
-      </div>
+    <div className="col align-self-center">
+      <h1 className="display-1 text-center">Welcome Citizen</h1>
+
+      {/* STEP 1 : Check if Web3 is injected */}
+
+      {!web3State.isWeb3 && <p>Please install MetaMask</p>}
+
+      {web3State.isEnabled ? (
+        <p className="text-center">MetaMask status: connected</p>
+      ) : (
+        <p className="text-center">MetaMask status: disconnected</p>
+      )}
+
+      {/* STEP 2 : Check if already connected to MetaMask */}
+
+      {web3State.isEnabled &&
+        web3State.network !== null &&
+        web3State.account !== ethers.constants.AddressZero && (
+          <>
+            <p className="text-center">Connected to {web3State.network.name}</p>
+            <p className="text-center">Account: {web3State.account}</p>
+            <p className="text-center">Balance: {web3State.balance} ETH</p>
+            {web3State.network && (
+              <>
+                <p className="text-center">
+                  Network name: {web3State.network.name}
+                </p>
+                <p className="text-center">
+                  Network ID: {web3State.network.chainId}
+                </p>
+              </>
+            )}
+          </>
+        )}
     </div>
   );
 }

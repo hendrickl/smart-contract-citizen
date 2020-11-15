@@ -4,7 +4,9 @@ import RegisterWeb3 from "./components/RegisterWeb3";
 function App() {
   return (
     <div className="container">
-      <RegisterWeb3 />;
+      <div className="row vh-100 justify-content-center">
+        <RegisterWeb3 />
+      </div>
     </div>
   );
 }
