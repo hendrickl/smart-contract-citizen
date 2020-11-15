@@ -154,9 +154,9 @@ function RegisterWeb3() {
       {!web3State.isWeb3 && <p>Please install MetaMask</p>}
 
       {web3State.isEnabled ? (
-        <p className="text-center">MetaMask status: connected</p>
+        <p className="text-center">MetaMask status : connected</p>
       ) : (
-        <p className="text-center">MetaMask status: disconnected</p>
+        <p className="text-center">MetaMask status : disconnected</p>
       )}
 
       {/* STEP 2 : Check if already connected to MetaMask */}
@@ -165,16 +165,18 @@ function RegisterWeb3() {
         web3State.network !== null &&
         web3State.account !== ethers.constants.AddressZero && (
           <>
-            <p className="text-center">Connected to {web3State.network.name}</p>
-            <p className="text-center">Account: {web3State.account}</p>
-            <p className="text-center">Balance: {web3State.balance} ETH</p>
+            <p className="text-center">
+              Connected to {web3State.network.name}.
+            </p>
+            <p className="text-center">Account : {web3State.account}</p>
+            <p className="text-center">Balance : {web3State.balance} ETH</p>
             {web3State.network && (
               <>
                 <p className="text-center">
-                  Network name: {web3State.network.name}
+                  Network name : {web3State.network.name}
                 </p>
                 <p className="text-center">
-                  Network ID: {web3State.network.chainId}
+                  Network ID : {web3State.network.chainId}
                 </p>
               </>
             )}
